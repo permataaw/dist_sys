@@ -1,1 +1,49 @@
+REST (Text Tools)
+Perubahan
+•	Mengganti sistem kalkulator menjadi Text Tools dengan endpoint:
+1.	/health – cek status server
+2.	/wc – hitung kata, karakter, baris
+3.	/slugify – ubah teks menjadi slug
+4.	/transform – transformasi teks (upper, lower, collapse_ws, dll.)
+Cara Menjalankan
+•	docker compose -f compose/rest.yml up -d
+•	docker compose -f compose/rest.yml exec rest-server python server.py
+•	docker compose -f compose/rest.yml exec rest-client python client.py --op wc --text "Halo   Dunia\nREST"
+•	docker compose -f compose/rest.yml exec rest-client python client.py --op slugify --text "Belajar REST & Docker!"
+•	docker compose -f compose/rest.yml exec rest-client python client.py --op transform --text "  halo   rest  " --ops "collapse_ws,upper"
+
+SOAP (WordCount)
+Perubahan
+•	Mengimplementasikan layanan SOAP sederhana untuk menghitung jumlah kata dari teks.
+•	Server menyediakan 1 operasi yaitu wc(text) untuk menerima teks dan mengembalikan jumlah kata (dipisah berdasarkan spasi/whitespace).
+Cara Menjalankan
+•	docker compose -f compose/soap.yml up -d
+•	docker compose -f compose/soap.yml exec soap-server python server.py
+•	docker compose -f compose/soap.yml exec soap-client python client.py 
+Hasil Uji
+•	Input: "Sistem terdistribusi kelas B" → Output: wc ->4 kata
+
+RPC (Text Tool)
+Perubahan
+•	Sistem diubah menjadi layanan RPC sederhana yang berfungsi sebagai text tool.
+•	Server menyediakan dua operasi utama yaitu wc(text) untuk menghitung jumlah kata dalam sebuah teks dengan memisahkan berdasarkan spasi atau whitespace dan transform(text, ops) untuk melakukan transformasi teks sesuai daftar operasi yang diberikan, seperti upper, lower, reverse, atau strip.
+
+Cara Menjalankan
+•	docker compose -f compose/rpc.yml up -d
+•	docker compose -f compose/rpc.yml exec rpc-server python rpcserver.py
+•	docker compose -f compose/rpc.yml exec rpc-client python rpcclient.py
+
+UDP (Echo + WordCount)
+Perubahan
+•	Mengimplementasikan layanan UDP sederhana untuk mengembalikan pesan yang dikirim (echo).
+•	Menghitung jumlah kata dari teks yang dikirim (word count).
+•	Server menerima teks, lalu mengirimkan 2 balasan ke client yaitu Echo dari pesan dan word Count jumlah kata (dipisah berdasarkan spasi/whitespace).
+Cara Menjalankan
+•	docker compose -f compose/udp.yml up -d
+•	docker compose -f compose/udp.yml exec udp-server python serverUDP.py
+•	docker compose -f compose/udp.yml exec udp-client python clientUDP.py
+
+
+
+
 
