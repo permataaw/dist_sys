@@ -5,23 +5,26 @@ Created on Thu Oct  3 12:51:57 2024
 
 @author: widhi
 """
-
+import os
 import socket
 
-# Set up the client socket
+# Setup client socket
+server_address = (
+    os.getenv("UDP_HOST", "udp-server"),
+    int(os.getenv("UDP_PORT", "12345"))
+)
 client_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-# Server address (match serverUDP.py listening port 12345)
-# Use docker compose service name for UDP server
-server_address = ('udp-server', 12345)
+# Kirim pesan ke server
+message = "Halo server sistem terdistribusi"
+client_socket.sendto(message.encode("utf-8"), server_address)
 
-# Send data to server
-message = "Hello, UDP server2!"
-client_socket.sendto(message.encode('utf-8'), server_address)
+# Terima dua balasan: echo dan word count
+data1, _ = client_socket.recvfrom(1024)
+print("Response 1:", data1.decode("utf-8"))
 
-# Receive response from server
-data, server = client_socket.recvfrom(1024)
-print(f"Received from server: {data.decode('utf-8')}")
+data2, _ = client_socket.recvfrom(1024)
+print("Response 2:", data2.decode("utf-8"))
 
-# Close the socket
+# Tutup socket
 client_socket.close()

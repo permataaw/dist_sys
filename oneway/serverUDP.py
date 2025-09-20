@@ -6,22 +6,30 @@ Created on Thu Oct  3 12:51:14 2024
 @author: widhi
 """
 
+import os
 import socket
 
-# Set up the server socket
+def word_count(s: str) -> int:
+    return len((s or "").split())
+
+port = int(os.getenv("UDP_PORT", "12345"))
 server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+server_socket.bind(("0.0.0.0", port))
 
-# Bind the socket to an IP and port
-server_address = ('0.0.0.0', 12345)
-server_socket.bind(server_address)
-
-print(f"UDP server up and listening on {server_address}")
+print(f"UDP server up and listening on 0.0.0.0:{port}")
 
 while True:
-    # Receive data from client
     data, client_address = server_socket.recvfrom(1024)
-    print(f"Received message from {client_address}: {data.decode('utf-8')}")
-    
-    # Send a response back to the client
-    message = f"Hello, {client_address}. You said: {data.decode('utf-8')}"
-    server_socket.sendto(message.encode('utf-8'), client_address)
+    text = data.decode("utf-8")
+    print(f"Received message from {client_address}: {text}")
+
+    # Balasan echo
+    echo_message = f"Hello, {client_address}. You said: {text}"
+    server_socket.sendto(echo_message.encode("utf-8"), client_address)
+    print(f"[SENT] {echo_message}")
+
+    # Balasan word count
+    count = word_count(text)
+    wc_message = f"Jumlah kata: {count}"
+    server_socket.sendto(wc_message.encode("utf-8"), client_address)
+    print(f"[SENT] {wc_message}")

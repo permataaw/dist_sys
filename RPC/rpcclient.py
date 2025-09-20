@@ -6,27 +6,25 @@ Created on Fri Sep 20 20:45:15 2024
 @author: widhi
 """
 
-import requests
-import json
+import requests, json
 
-# Fungsi untuk memanggil RPC
+# Fungsi panggil RPC
 def call_rpc(method, params):
-    # Use docker compose service name for internal networking
     url = "http://rpc-server:4000"
-    headers = {'content-type': 'application/json'}
+    headers = {"content-type": "application/json"}
     payload = {
         "jsonrpc": "2.0",
         "method": method,
         "params": params,
-        "id": 1,
+        "id": 1
     }
     response = requests.post(url, data=json.dumps(payload), headers=headers).json()
     return response
 
-# Panggil operasi penjumlahan (uses division in server; provide numbers)
-result_add = call_rpc("add", [10, 2])
-print(f"Result of add: {result_add['result']}")
+# Word Count
+res_wc = call_rpc("wc", ["Halo sistem terdistribusi kelas B"])
+print("WC:", res_wc["result"])
 
-# Panggil operasi perkalian
-result_multiply = call_rpc("multiply", [10, 5])
-print(f"Result of multiply: {result_multiply['result']}")
+# Transform
+res_trans = call_rpc("transform", ["  teks   dengan   Spasi  Ganda ", ["collapse_ws", "title"]])
+print("Transform:", res_trans["result"])
